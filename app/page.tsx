@@ -179,7 +179,7 @@ export default function Home() {
                 ) : (
                   <div className="grid gap-4">
                     {recommendations.map((rec, index) => (
-                      <div key={index} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div key={index} data-testid="recommendation-card" className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                         <h3 className="font-medium text-gray-900 mb-2">{rec.prompt}</h3>
                         <p className="text-sm text-gray-600">{rec.explanation || "Highly relevant to your domain"}</p>
                         <p className="text-xs text-gray-400 mt-1">Similarity: {(rec.similarity * 100).toFixed(1)}%</p>

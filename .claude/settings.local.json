@@ -6,7 +6,15 @@
       "Bash(npm run build:*)",
       "Bash(npx next:*)",
       "Bash(npx tsc:*)",
-      "Bash(npm run lint)"
+      "Bash(npm run lint)",
+      "Bash(npm install:*)",
+      "Bash(npx:*)",
+      "Bash(npm test)",
+      "Bash(del testsdebug.spec.ts)",
+      "Bash(del testssimple.spec.ts)",
+      "Bash(del testsworking.spec.ts)",
+      "Bash(npm run test:*)",
+      "Bash(del testssimple.spec.ts testsdebug.spec.ts testsworking.spec.ts testsrobust-recommendations.spec.ts test-basic.js)"
     ],
     "deny": []
   }
