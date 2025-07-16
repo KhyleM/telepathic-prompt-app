@@ -1,5 +1,29 @@
-import { NextAuthOptions } from "next-auth";
+import { NextAuthOptions, User, Session } from "next-auth";
+import { JWT } from "next-auth/jwt";
 import GitHubProvider from "next-auth/providers/github";
+
+// Extend the default session type to include custom properties
+declare module "next-auth" {
+  interface Session {
+    accessToken?: string;
+    userId?: string;
+    user: {
+      id?: string;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+    };
+  }
+}
+
+// Extend the default JWT type to include custom properties
+declare module "next-auth/jwt" {
+  interface JWT {
+    accessToken?: string;
+    userId?: string;
+    user?: User;
+  }
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -29,7 +53,14 @@ export const authOptions: NextAuthOptions = {
       if (token) {
         session.accessToken = token.accessToken as string;
         session.userId = token.userId as string;
-        session.user = token.user as any;
+        if (token.user) {
+          session.user = {
+            id: token.user.id,
+            name: token.user.name,
+            email: token.user.email,
+            image: token.user.image,
+          };
+        }
       }
       return session;
     },
