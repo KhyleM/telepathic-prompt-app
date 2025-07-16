@@ -14,7 +14,7 @@ import { recommendationsService, RecommendationInsert } from '../../../lib/supab
 
 // Initialize OpenAI client with API key from environment variables
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY || '',
 });
 
 /**
@@ -230,7 +230,7 @@ interface RecommendRequest {
 interface PromptRecommendation {
   prompt: string;           // The recommended prompt text
   similarity: number;       // Cosine similarity score (0-1)
-  explanation?: string;     // Custom explanation for relevance
+  explanation: string;      // Custom explanation for relevance
 }
 
 /**
@@ -256,6 +256,15 @@ interface PromptRecommendation {
 export async function POST(request: NextRequest) {
   try {
     console.log('API route called');
+    
+    // Check for required environment variables
+    if (!process.env.OPENAI_API_KEY) {
+      console.error('Missing OPENAI_API_KEY environment variable');
+      return NextResponse.json(
+        { error: 'Server configuration error. Please try again later.' },
+        { status: 500 }
+      );
+    }
     
     // Parse and validate request body
     const body: RecommendRequest = await request.json();
@@ -295,7 +304,7 @@ export async function POST(request: NextRequest) {
     
     // Step 4: Calculate similarity scores for each prompt
     console.log('Calculating similarity scores...');
-    const recommendations: PromptRecommendation[] = unusedPrompts.map((prompt, index) => ({
+    const recommendations = unusedPrompts.map((prompt, index) => ({
       prompt,
       similarity: cosineSimilarity(domainEmbedding, promptEmbeddings[index])
     }));
@@ -314,7 +323,7 @@ export async function POST(request: NextRequest) {
     const explanations = await Promise.all(explanationPromises);
     
     // Step 7: Combine recommendations with their explanations
-    const recommendationsWithExplanations = topRecommendations.map((rec, index) => ({
+    const recommendationsWithExplanations: PromptRecommendation[] = topRecommendations.map((rec, index) => ({
       ...rec,
       explanation: explanations[index]
     }));

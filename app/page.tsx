@@ -9,7 +9,7 @@
 'use client';
 
 import { useState } from 'react';
-import { getPromptRecommendations, PromptRecommendation } from '../utils/recommendPrompts';
+import { PromptRecommendation } from '../utils/recommendPrompts';
 import AuthButton from '../components/AuthButton';
 import UserDisplay from '../components/UserDisplay';
 import Link from 'next/link';
